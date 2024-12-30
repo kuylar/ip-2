@@ -1,0 +1,10 @@
+.double-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 992px) {
+    .double-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
