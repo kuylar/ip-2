@@ -1,6 +1,6 @@
-function updateIlceler(el) {
+function updateIlceler(el, keyOverride) {
     return new Promise((res, rej) => {
-        const key = el.value.split(":")[1];
+        const key = keyOverride ?? el.value.split(":")[1];
         el.setAttribute("disabled", "");
         fetch("/api/address/ilceler?sehirKey=" + el.value)
             .then(x => x.json())
@@ -56,6 +56,7 @@ function updateMahalleler(el) {
         });
 }
 
+document.getElementById("selectSehir").value = 10;
 updateIlceler(document.getElementById("selectSehir")).then(() => {
     updateMahalleler(document.getElementById("selectIlce"))
 });
