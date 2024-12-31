@@ -272,7 +272,7 @@ function updateSearchSuggestions(query, results) {
         });
     var first = null;
     results.forEach(result => {
-        var matches = result.dataset.searchtext.toLowerCase().includes(query.toLowerCase());
+        var matches = result.dataset.searchtext?.toLowerCase().includes(query.toLowerCase());
         result.style.display = matches ? "flex" : "none";
         if (matches && !first)
             first = result;
