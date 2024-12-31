@@ -192,8 +192,24 @@ class StocksController extends Controller
         $prices = StockValue::select('value', 'created_at')->orderBy("created_at", "DESC")->where("stock_id", "=", $id)->limit(1)->get();
         $usdPrice = $prices[0]["value"];
 
-        $total = $usdPrice * $validated["amount"];
+        $userStocks = UserStock::where("user_id", Auth::id())->where("stock_id", $id)->get();
+        $userStockAmount = 0;
 
+        foreach ($userStocks as $userStock) {
+            if ($userStock->transaction_type == "buy")
+                $userStockAmount += $userStock->stock_amount;
+            else
+                $userStockAmount -= $userStock->stock_amount;
+        }
+
+        if ($userStockAmount < $validated["amount"]) {
+            return response()->json([
+                "success" => false,
+                "message" => "Yetersiz bakiye"
+            ]);
+        }
+
+        $total = $usdPrice * $validated["amount"];
         $success = WalletUtils::transaction($acc, "sell", $total * $currencyValue, $id);
 
         if (!$success) {
